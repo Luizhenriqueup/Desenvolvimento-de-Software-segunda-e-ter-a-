@@ -1,0 +1,91 @@
+Academia/
+
+├── Main.java
+├── Login.java
+├── Pessoa.java
+├── Aluno.java
+├── Personal.java
+├── Plano.java
+├── Maquina.java
+├── Academia.java
+├── Relatorio.java
+├── RelatorioAlunos.java
+└── ArquivoUtil.java
+
+Main.java
+→ Inicia o programa e exibe os menus.
+
+Login.java
+→ Controle de usuário, senha e tentativas.
+
+Pessoa.java
+→ Classe abstrata que será mãe de Aluno e Personal.
+
+Aluno.java
+→ Dados do aluno.
+
+Personal.java
+→ Dados do personal trainer.
+
+Plano.java
+→ Dados dos planos (VIP, mensal, anual).
+
+Maquina.java
+→ Controle das máquinas da academia.
+
+Academia.java
+→ Gerencia listas de alunos, personais e máquinas.
+
+Relatorio.java
+→ Interface dos relatórios.
+
+RelatorioAlunos.java
+→ Relatório de alunos cadastrados.
+
+ArquivoUtil.java
+→ Salvar e ler arquivos .txt.
+
+
+Academia/
+
+├── Main.java
+│
+├── classes/
+│   ├── Pessoa.java
+│   ├── Aluno.java
+│   ├── Personal.java
+│   ├── Plano.java
+│   ├── Maquina.java
+│   └── Academia.java
+│
+├── interfaces/
+│   └── Relatorio.java
+│
+├── relatorios/
+│   └── RelatorioAlunos.java
+│
+├── utils/
+│   ├── Login.java
+│   └── ArquivoUtil.java
+│
+└── arquivos/
+    ├── alunos.txt
+    ├── personais.txt
+    ├── maquinas.txt
+    └── senhas.txt
+
+
+classes/
+→ Classes principais do sistema.
+
+interfaces/
+→ Interfaces do projeto.
+
+relatorios/
+→ Relatórios do sistema.
+
+utils/
+→ Classes auxiliares.
+
+arquivos/
+→ Arquivos .txt usados para persistência.
