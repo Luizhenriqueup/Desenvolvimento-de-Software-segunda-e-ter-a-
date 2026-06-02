@@ -1,0 +1,8 @@
+luiz
+notebbok
+3000
+Cliente: Luiz
+Produto: Notebook
+Valor: 3000.0
+Cliente: luizProduto: notebbok
+Valor: 3000.0
