@@ -1,0 +1,1716 @@
+controller
+	alunoController.java 
+	package controller;
+
+import model.Aluno;
+import model.Plano;
+import utils.ArquivoUtil;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AlunoController {
+
+    private static final String ARQUIVO = "dados/alunos.txt";
+
+    public List<Aluno> listarAlunos() {
+        List<Aluno> alunos = new ArrayList<>();
+        List<String> linhas = ArquivoUtil.lerLinhas(ARQUIVO);
+
+        for (String linha : linhas) {
+            alunos.add(Aluno.fromLinhaArquivo(linha));
+        }
+
+        return alunos;
+    }
+
+    public void salvarAlunos(List<Aluno> alunos) {
+        List<String> linhas = new ArrayList<>();
+        for (Aluno aluno : alunos) {
+            linhas.add(aluno.paraLinhaArquivo());
+        }
+        ArquivoUtil.escreverLinhas(ARQUIVO, linhas);
+    }
+
+    public int gerarProximoId() {
+        List<Aluno> alunos = listarAlunos();
+        int maiorId = 0;
+        for (Aluno aluno : alunos) {
+            if (aluno.getId() > maiorId) {
+                maiorId = aluno.getId();
+            }
+        }
+        return maiorId + 1;
+    }
+
+    public void cadastrarAluno(String nome, String cpf, int idade, String nomePlano, LocalDate dataInicio) {
+        int id = gerarProximoId();
+        Plano plano = Plano.criarPorNome(nomePlano);
+        LocalDate dataVencimento = dataInicio.plusDays(30);
+
+        Aluno aluno = new Aluno(id, nome, cpf, idade, plano, dataInicio, dataVencimento);
+
+        List<Aluno> alunos = listarAlunos();
+        alunos.add(aluno);
+        salvarAlunos(alunos);
+    }
+
+    public Aluno buscarPorId(int id) {
+        List<Aluno> alunos = listarAlunos();
+        for (Aluno aluno : alunos) {
+            if (aluno.getId() == id) {
+                return aluno;
+            }
+        }
+        return null;
+    }
+
+    public boolean removerAluno(int id) {
+        List<Aluno> alunos = listarAlunos();
+        Aluno alunoEncontrado = null;
+
+        for (Aluno aluno : alunos) {
+            if (aluno.getId() == id) {
+                alunoEncontrado = aluno;
+                break;
+            }
+        }
+
+        if (alunoEncontrado == null) {
+            return false;
+        }
+
+        alunos.remove(alunoEncontrado);
+        salvarAlunos(alunos);
+        return true;
+    }
+
+    public boolean atualizarPlano(int id, String nomePlano) {
+        List<Aluno> alunos = listarAlunos();
+
+        for (Aluno aluno : alunos) {
+            if (aluno.getId() == id) {
+                Plano novoPlano = Plano.criarPorNome(nomePlano);
+                aluno.setPlano(novoPlano);
+                salvarAlunos(alunos);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean renovarPlano(int id) {
+        List<Aluno> alunos = listarAlunos();
+
+        for (Aluno aluno : alunos) {
+            if (aluno.getId() == id) {
+                LocalDate novaData = LocalDate.now();
+                aluno.setDataInicio(novaData);
+                aluno.setDataVencimento(novaData.plusDays(30));
+                salvarAlunos(alunos);
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public Aluno buscarPorCpf(String cpf) {
+
+    List<Aluno> alunos = listarAlunos();
+
+    for (Aluno aluno : alunos) {
+        if (aluno.getCpf().equals(cpf)) {
+            return aluno;
+        }
+    }
+    return null;
+}
+}
+	loginController.java
+	package controller;
+
+import model.Aluno;
+import model.Plano;
+import utils.ArquivoUtil;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class AlunoController {
+
+    private static final String ARQUIVO = "dados/alunos.txt";
+
+    public List<Aluno> listarAlunos() {
+        List<Aluno> alunos = new ArrayList<>();
+        List<String> linhas = ArquivoUtil.lerLinhas(ARQUIVO);
+
+        for (String linha : linhas) {
+            alunos.add(Aluno.fromLinhaArquivo(linha));
+        }
+
+        return alunos;
+    }
+
+    public void salvarAlunos(List<Aluno> alunos) {
+        List<String> linhas = new ArrayList<>();
+        for (Aluno aluno : alunos) {
+            linhas.add(aluno.paraLinhaArquivo());
+        }
+        ArquivoUtil.escreverLinhas(ARQUIVO, linhas);
+    }
+
+    public int gerarProximoId() {
+        List<Aluno> alunos = listarAlunos();
+        int maiorId = 0;
+        for (Aluno aluno : alunos) {
+            if (aluno.getId() > maiorId) {
+                maiorId = aluno.getId();
+            }
+        }
+        return maiorId + 1;
+    }
+
+    public void cadastrarAluno(String nome, String cpf, int idade, String nomePlano, LocalDate dataInicio) {
+        int id = gerarProximoId();
+        Plano plano = Plano.criarPorNome(nomePlano);
+        LocalDate dataVencimento = dataInicio.plusDays(30);
+
+        Aluno aluno = new Aluno(id, nome, cpf, idade, plano, dataInicio, dataVencimento);
+
+        List<Aluno> alunos = listarAlunos();
+        alunos.add(aluno);
+        salvarAlunos(alunos);
+    }
+
+    public Aluno buscarPorId(int id) {
+        List<Aluno> alunos = listarAlunos();
+        for (Aluno aluno : alunos) {
+            if (aluno.getId() == id) {
+                return aluno;
+            }
+        }
+        return null;
+    }
+
+    public boolean removerAluno(int id) {
+        List<Aluno> alunos = listarAlunos();
+        Aluno alunoEncontrado = null;
+
+        for (Aluno aluno : alunos) {
+            if (aluno.getId() == id) {
+                alunoEncontrado = aluno;
+                break;
+            }
+        }
+
+        if (alunoEncontrado == null) {
+            return false;
+        }
+
+        alunos.remove(alunoEncontrado);
+        salvarAlunos(alunos);
+        return true;
+    }
+
+    public boolean atualizarPlano(int id, String nomePlano) {
+        List<Aluno> alunos = listarAlunos();
+
+        for (Aluno aluno : alunos) {
+            if (aluno.getId() == id) {
+                Plano novoPlano = Plano.criarPorNome(nomePlano);
+                aluno.setPlano(novoPlano);
+                salvarAlunos(alunos);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean renovarPlano(int id) {
+        List<Aluno> alunos = listarAlunos();
+
+        for (Aluno aluno : alunos) {
+            if (aluno.getId() == id) {
+                LocalDate novaData = LocalDate.now();
+                aluno.setDataInicio(novaData);
+                aluno.setDataVencimento(novaData.plusDays(30));
+                salvarAlunos(alunos);
+                return true;
+            }
+        }
+
+        return false;
+    }
+    public Aluno buscarPorCpf(String cpf) {
+
+    List<Aluno> alunos = listarAlunos();
+
+    for (Aluno aluno : alunos) {
+        if (aluno.getCpf().equals(cpf)) {
+            return aluno;
+        }
+    }
+    return null;
+}
+}
+	PersonalController.java
+	package controller;
+
+import model.Aluno;
+import model.Personal;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PersonalController {
+
+    private static List<Personal> personais = new ArrayList<>();
+
+    static {
+        personais.add(new Personal(1, "Carlos"));
+        personais.add(new Personal(2, "Ana"));
+        personais.add(new Personal(3, "Marcos"));
+        personais.add(new Personal(4, "Julia"));
+        personais.add(new Personal(5, "Pedro"));
+    }
+
+    public List<Personal> listar() {
+        return personais;
+    }
+    public boolean vincularAluno(Aluno aluno, int idPersonal) {
+
+    Personal personalEscolhido = null;
+
+    for (Personal p : personais) {
+        if (p.getId() == idPersonal) {
+            personalEscolhido = p;
+            break;
+        }
+    }
+
+    if (personalEscolhido == null) {
+        return false;
+    }
+
+    if (personalEscolhido.getQuantidadeAlunos() >= 5) {
+        return false;
+    }
+
+    aluno.setPersonal(personalEscolhido.getNome());
+    personalEscolhido.setQuantidadeAlunos(
+        personalEscolhido.getQuantidadeAlunos() + 1
+    );
+
+    return true;
+}
+}
+	RegistroAcessoController.java
+	package controller;
+
+import model.RegistroAcesso;
+import utils.ArquivoUtil;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RegistroAcessoController {
+
+    private static final String ARQUIVO = "dados/registros.txt";
+
+    public List<RegistroAcesso> listarRegistros() {
+        List<RegistroAcesso> registros = new ArrayList<>();
+        List<String> linhas = ArquivoUtil.lerLinhas(ARQUIVO);
+
+        for (String linha : linhas) {
+            registros.add(RegistroAcesso.fromLinhaArquivo(linha));
+        }
+
+        return registros;
+    }
+
+    public void salvarRegistros(List<RegistroAcesso> registros) {
+        List<String> linhas = new ArrayList<>();
+        for (RegistroAcesso registro : registros) {
+            linhas.add(registro.paraLinhaArquivo());
+        }
+        ArquivoUtil.escreverLinhas(ARQUIVO, linhas);
+    }
+
+    public void registrarEntrada(int idAluno, String nomeAluno) {
+        RegistroAcesso registro = new RegistroAcesso(idAluno, nomeAluno, LocalDateTime.now(), null);
+        List<RegistroAcesso> registros = listarRegistros();
+        registros.add(registro);
+        salvarRegistros(registros);
+    }
+
+    public boolean registrarSaida(int idAluno) {
+        List<RegistroAcesso> registros = listarRegistros();
+
+        for (int i = registros.size() - 1; i >= 0; i--) {
+            RegistroAcesso registro = registros.get(i);
+            if (registro.getIdAluno() == idAluno && registro.getDataHoraSaida() == null) {
+                registro.setDataHoraSaida(LocalDateTime.now());
+                salvarRegistros(registros);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean alunoEstaDentro(int idAluno) {
+        List<RegistroAcesso> registros = listarRegistros();
+
+        for (int i = registros.size() - 1; i >= 0; i--) {
+            RegistroAcesso registro = registros.get(i);
+            if (registro.getIdAluno() == idAluno) {
+                return registro.getDataHoraSaida() == null;
+            }
+        }
+
+        return false;
+    }
+}
+	RelatorioController.java
+	package controller;
+
+import model.Aluno;
+import model.RegistroAcesso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class RelatorioController {
+
+    private AlunoController alunoController;
+    private RegistroAcessoController registroController;
+
+    public RelatorioController() {
+        this.alunoController = new AlunoController();
+        this.registroController = new RegistroAcessoController();
+    }
+
+    public List<Aluno> listarAlunosAtivos() {
+        List<Aluno> ativos = new ArrayList<>();
+        for (Aluno aluno : alunoController.listarAlunos()) {
+            if (aluno.getStatus().equals("Ativo")) {
+                ativos.add(aluno);
+            }
+        }
+        return ativos;
+    }
+
+    public List<Aluno> listarAlunosVencidos() {
+        List<Aluno> vencidos = new ArrayList<>();
+        for (Aluno aluno : alunoController.listarAlunos()) {
+            if (aluno.getStatus().equals("Vencido")) {
+                vencidos.add(aluno);
+            }
+        }
+        return vencidos;
+    }
+
+    public int contarPorPlano(String nomePlano) {
+        int total = 0;
+        for (Aluno aluno : alunoController.listarAlunos()) {
+            if (aluno.getPlano().getNome().equalsIgnoreCase(nomePlano)) {
+                total++;
+            }
+        }
+        return total;
+    }
+
+    public List<RegistroAcesso> historicoAcessos() {
+        return registroController.listarRegistros();
+    }
+}
+
+interfaces
+	Persitivel.java
+	package interfaces;
+
+public interface Persistivel {
+    String paraLinhaArquivo();
+}
+
+Main.java
+	Main.java
+	import view.LoginView;
+import view.MenuPrincipalView;
+
+import java.io.File;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        criarPastaDados();
+
+        Scanner scanner = new Scanner(System.in);
+
+        LoginView loginView = new LoginView(scanner);
+        boolean autenticado = loginView.iniciar();
+
+        if (autenticado) {
+            MenuPrincipalView menuPrincipal = new MenuPrincipalView(scanner);
+            menuPrincipal.exibirMenu();
+        }
+
+        scanner.close();
+    }
+
+    private static void criarPastaDados() {
+        File pasta = new File("dados");
+        if (!pasta.exists()) {
+            pasta.mkdir();
+        }
+    }
+}
+
+model
+	Aluno.java
+	package model;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class Aluno extends Pessoa {
+
+    private Plano plano;
+    private LocalDate dataInicio;
+    private LocalDate dataVencimento;
+    private String personal;
+
+    private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public Aluno(int id, String nome, String cpf, int idade, Plano plano, LocalDate dataInicio, LocalDate dataVencimento) {
+        super(id, nome, cpf, idade);
+        this.plano = plano;
+        this.dataInicio = dataInicio;
+        this.dataVencimento = dataVencimento;
+        this.personal = "Nenhum";
+    }
+
+    public Plano getPlano() {
+        return plano;
+    }
+
+    public void setPlano(Plano plano) {
+        this.plano = plano;
+    }
+
+    public LocalDate getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public LocalDate getDataVencimento() {
+        return dataVencimento;
+    }
+    
+    public String getPersonal() {
+    return personal;
+
+    }
+
+    public void setPersonal(String personal) {
+    this.personal = personal;
+}
+
+
+    public void setDataVencimento(LocalDate dataVencimento) {
+        this.dataVencimento = dataVencimento;
+    }
+
+    public String getStatus() {
+        LocalDate hoje = LocalDate.now();
+        if (hoje.isAfter(dataVencimento)) {
+            return "Vencido";
+        }
+        return "Ativo";
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id
+                + " | Nome: " + nome
+                + " | CPF: " + cpf
+                + " | Idade: " + idade
+                + " | Plano: " + plano.getNome()
+                + " | Inicio: " + dataInicio.format(FORMATO_DATA)
+                + " | Vencimento: " + dataVencimento.format(FORMATO_DATA)
+                + " | Status: " + getStatus()
+                + " | Personal: " + personal;
+    }
+
+    @Override
+    public String paraLinhaArquivo() {
+        return id + ";" + nome + ";" + cpf + ";" + idade + ";" + plano.getNome() + ";"
+                + dataInicio.format(FORMATO_DATA) + ";" + dataVencimento.format(FORMATO_DATA);
+    }
+
+    public static Aluno fromLinhaArquivo(String linha) {
+        String[] partes = linha.split(";");
+        int id = Integer.parseInt(partes[0]);
+        String nome = partes[1];
+        String cpf = partes[2];
+        int idade = Integer.parseInt(partes[3]);
+        Plano plano = Plano.criarPorNome(partes[4]);
+        LocalDate inicio = LocalDate.parse(partes[5], FORMATO_DATA);
+        LocalDate vencimento = LocalDate.parse(partes[6], FORMATO_DATA);
+        return new Aluno(id, nome, cpf, idade, plano, inicio, vencimento);
+    }
+}
+
+	Personal.java
+	package model;
+
+public class Personal {
+
+    private int id;
+    private String nome;
+    private int quantidadeAlunos;
+
+    public Personal(int id, String nome) {
+        this.id = id;
+        this.nome = nome;
+        this.quantidadeAlunos = 0;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public int getQuantidadeAlunos() {
+        return quantidadeAlunos;
+    }
+
+    public void setQuantidadeAlunos(int quantidadeAlunos) {
+        this.quantidadeAlunos = quantidadeAlunos;
+    }
+}
+	Pessoa.java
+	package model;
+
+import interfaces.Persistivel;
+
+public abstract class Pessoa implements Persistivel {
+
+    protected int id;
+    protected String nome;
+    protected String cpf;
+    protected int idade;
+
+    public Pessoa(int id, String nome, String cpf, int idade) {
+        this.id = id;
+        this.nome = nome;
+        this.cpf = cpf;
+        this.idade = idade;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public int getIdade() {
+        return idade;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
+    }
+
+    @Override
+    public abstract String toString();
+
+    @Override
+    public abstract String paraLinhaArquivo();
+}
+	Plano.java
+	package model;
+
+public class Plano {
+
+    private String nome;
+    private String descricao;
+
+    public Plano(String nome, String descricao) {
+        this.nome = nome;
+        this.descricao = descricao;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public static Plano criarPorNome(String nome) {
+        switch (nome.toUpperCase()) {
+            case "BASICO":
+                return new Plano("BASICO", "Sem personal");
+            case "PREMIUM":
+                return new Plano("PREMIUM", "Personal 3 vezes por semana");
+            case "VIP":
+                return new Plano("VIP", "Personal todos os dias");
+            default:
+                return new Plano("BASICO", "Sem personal");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return nome + " (" + descricao + ")";
+    }
+}
+	RegistroAcesso.java
+	package model;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import interfaces.Persistivel;
+
+public class RegistroAcesso implements Persistivel {
+
+    private int idAluno;
+    private String nomeAluno;
+    private LocalDateTime dataHoraEntrada;
+    private LocalDateTime dataHoraSaida;
+
+    private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
+    public RegistroAcesso(int idAluno, String nomeAluno, LocalDateTime dataHoraEntrada, LocalDateTime dataHoraSaida) {
+        this.idAluno = idAluno;
+        this.nomeAluno = nomeAluno;
+        this.dataHoraEntrada = dataHoraEntrada;
+        this.dataHoraSaida = dataHoraSaida;
+    }
+
+    public int getIdAluno() {
+        return idAluno;
+    }
+
+    public void setIdAluno(int idAluno) {
+        this.idAluno = idAluno;
+    }
+
+    public String getNomeAluno() {
+        return nomeAluno;
+    }
+
+    public void setNomeAluno(String nomeAluno) {
+        this.nomeAluno = nomeAluno;
+    }
+
+    public LocalDateTime getDataHoraEntrada() {
+        return dataHoraEntrada;
+    }
+
+    public void setDataHoraEntrada(LocalDateTime dataHoraEntrada) {
+        this.dataHoraEntrada = dataHoraEntrada;
+    }
+
+    public LocalDateTime getDataHoraSaida() {
+        return dataHoraSaida;
+    }
+
+    public void setDataHoraSaida(LocalDateTime dataHoraSaida) {
+        this.dataHoraSaida = dataHoraSaida;
+    }
+
+    @Override
+    public String toString() {
+        String saida = (dataHoraSaida == null) ? "Ainda na academia" : dataHoraSaida.format(FORMATO);
+        return "ID Aluno: " + idAluno
+                + " | Nome: " + nomeAluno
+                + " | Entrada: " + dataHoraEntrada.format(FORMATO)
+                + " | Saida: " + saida;
+    }
+
+    @Override
+    public String paraLinhaArquivo() {
+        String saida = (dataHoraSaida == null) ? "null" : dataHoraSaida.format(FORMATO);
+        return idAluno + ";" + nomeAluno + ";" + dataHoraEntrada.format(FORMATO) + ";" + saida;
+    }
+
+    public static RegistroAcesso fromLinhaArquivo(String linha) {
+        String[] partes = linha.split(";");
+        int idAluno = Integer.parseInt(partes[0]);
+        String nome = partes[1];
+        LocalDateTime entrada = LocalDateTime.parse(partes[2], FORMATO);
+        LocalDateTime saida = partes[3].equals("null") ? null : LocalDateTime.parse(partes[3], FORMATO);
+        return new RegistroAcesso(idAluno, nome, entrada, saida);
+    }
+}
+	Usuário.java
+	package model;
+
+import interfaces.Persistivel;
+
+public class Usuario implements Persistivel {
+
+    private String login;
+    private String senha;
+    private String senhasAnteriores;
+
+    public Usuario(String login, String senha, String senhasAnteriores) {
+        this.login = login;
+        this.senha = senha;
+        this.senhasAnteriores = senhasAnteriores;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public String getSenhasAnteriores() {
+        return senhasAnteriores;
+    }
+
+    public void setSenhasAnteriores(String senhasAnteriores) {
+        this.senhasAnteriores = senhasAnteriores;
+    }
+
+    @Override
+    public String toString() {
+        return "Login: " + login;
+    }
+
+    @Override
+    public String paraLinhaArquivo() {
+        return login + ";" + senha + ";" + senhasAnteriores;
+    }
+
+    public static Usuario fromLinhaArquivo(String linha) {
+        String[] partes = linha.split(";");
+        String login = partes[0];
+        String senha = partes[1];
+        String anteriores = partes.length > 2 ? partes[2] : "";
+        return new Usuario(login, senha, anteriores);
+    }
+}
+
+utils
+	ArquivoUtil.java
+	package utils;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ArquivoUtil {
+
+    public static List<String> lerLinhas(String caminho) {
+        List<String> linhas = new ArrayList<>();
+        File arquivo = new File(caminho);
+
+        if (!arquivo.exists()) {
+            return linhas;
+        }
+
+        try (BufferedReader leitor = new BufferedReader(new FileReader(arquivo))) {
+            String linha;
+            while ((linha = leitor.readLine()) != null) {
+                if (!linha.trim().isEmpty()) {
+                    linhas.add(linha);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao ler arquivo: " + e.getMessage());
+        }
+
+        return linhas;
+    }
+
+    public static void escreverLinhas(String caminho, List<String> linhas) {
+        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(caminho))) {
+            for (String linha : linhas) {
+                escritor.write(linha);
+                escritor.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Erro ao escrever arquivo: " + e.getMessage());
+        }
+    }
+
+    public static void adicionarLinha(String caminho, String linha) {
+        try (BufferedWriter escritor = new BufferedWriter(new FileWriter(caminho, true))) {
+            escritor.write(linha);
+            escritor.newLine();
+        } catch (IOException e) {
+            System.out.println("Erro ao escrever arquivo: " + e.getMessage());
+        }
+    }
+}
+	ValidacaoUtil.java
+	package utils;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+public class ValidacaoUtil {
+
+    private static final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public static boolean cpfValido(String cpf) {
+        return cpf != null && cpf.matches("\\d{11}");
+    }
+
+    public static boolean nomeValido(String nome) {
+        return nome != null && !nome.trim().isEmpty();
+    }
+
+    public static boolean numeroInteiroValido(String texto) {
+        try {
+            Integer.parseInt(texto);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean dataValida(String data) {
+        try {
+            LocalDate.parse(data, FORMATO_DATA);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    public static LocalDate converterParaData(String data) {
+        return LocalDate.parse(data, FORMATO_DATA);
+    }
+
+    public static boolean planoValido(String plano) {
+        String p = plano.toUpperCase();
+        return p.equals("BASICO") || p.equals("PREMIUM") || p.equals("VIP");
+    }
+}
+
+view
+	AlunoView.java
+	package view;
+
+import controller.AlunoController;
+import model.Aluno;
+import utils.ValidacaoUtil;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Scanner;
+
+public class AlunoView {
+
+    private Scanner scanner;
+    private AlunoController alunoController;
+
+    public AlunoView(Scanner scanner) {
+        this.scanner = scanner;
+        this.alunoController = new AlunoController();
+    }
+
+    public void exibirMenu() {
+        int opcao = 0;
+
+        do {
+            System.out.println("\n=== GERENCIAR ALUNOS ===");
+            System.out.println("1 - Cadastrar Aluno");
+            System.out.println("2 - Listar Alunos");
+            System.out.println("3 - Remover Aluno");
+            System.out.println("4 - Renovar Plano");
+            System.out.println("0 - Voltar");
+            System.out.print("Escolha uma opcao: ");
+
+            String entrada = scanner.nextLine();
+
+            if (!ValidacaoUtil.numeroInteiroValido(entrada)) {
+                System.out.println("Opcao invalida!");
+                continue;
+            }
+
+            opcao = Integer.parseInt(entrada);
+
+            switch (opcao) {
+                case 1:
+                    cadastrarAluno();
+                    break;
+                case 2:
+                    listarAlunos();
+                    break;
+                case 3:
+                    removerAluno();
+                    break;
+                case 4:
+                    renovarPlano();
+                    break;
+                case 0:
+                    System.out.println("Voltando ao menu principal...");
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+            }
+
+        } while (opcao != 0);
+    }
+
+    private void cadastrarAluno() {
+        System.out.println("\n=== CADASTRAR ALUNO ===");
+
+        String nome;
+        do {
+            System.out.print("Nome: ");
+            nome = scanner.nextLine();
+            if (!ValidacaoUtil.nomeValido(nome)) {
+                System.out.println("Nome invalido. Tente novamente.");
+            }
+        } while (!ValidacaoUtil.nomeValido(nome));
+
+        String cpf;
+        while (true) {
+            System.out.print("CPF (somente numeros, 11 digitos): ");
+             cpf = scanner.nextLine();
+
+            if (!ValidacaoUtil.cpfValido(cpf)) {
+        System.out.println("CPF invalido. Digite 11 numeros.");
+        continue;
+            }
+
+             if (alunoController.buscarPorCpf(cpf) != null) {
+        System.out.println("CPF ja cadastrado! Digite outro CPF.");
+        continue;
+         }
+
+    break;
+}
+
+        int idade;
+        while (true) {
+            System.out.print("Idade: ");
+            String entradaIdade = scanner.nextLine();
+            if (ValidacaoUtil.numeroInteiroValido(entradaIdade)) {
+                idade = Integer.parseInt(entradaIdade);
+                break;
+            }
+            System.out.println("Idade invalida. Digite um numero.");
+        }
+
+        String plano;
+        do {
+            System.out.println("Planos disponiveis: BASICO, PREMIUM, VIP");
+            System.out.print("Escolha o plano: ");
+            plano = scanner.nextLine();
+            if (!ValidacaoUtil.planoValido(plano)) {
+                System.out.println("Plano invalido. Escolha BASICO, PREMIUM ou VIP.");
+            }
+        } while (!ValidacaoUtil.planoValido(plano));
+
+        LocalDate dataInicio;
+        while (true) {
+            System.out.print("Data de inicio do plano (dd/MM/yyyy): ");
+            String entradaData = scanner.nextLine();
+            if (ValidacaoUtil.dataValida(entradaData)) {
+                dataInicio = ValidacaoUtil.converterParaData(entradaData);
+                break;
+            }
+            System.out.println("Data invalida. Use o formato dd/MM/yyyy.");
+        }
+
+        alunoController.cadastrarAluno(nome, cpf, idade, plano, dataInicio);
+        System.out.println("Aluno cadastrado com sucesso!");
+        System.out.println("Vencimento do plano: " + dataInicio.plusDays(30).format(
+                java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+    }
+
+    private void listarAlunos() {
+        System.out.println("\n=== LISTA DE ALUNOS ===");
+        List<Aluno> alunos = alunoController.listarAlunos();
+
+        if (alunos.isEmpty()) {
+            System.out.println("Nenhum aluno cadastrado.");
+            return;
+        }
+
+        for (Aluno aluno : alunos) {
+            System.out.println(aluno.toString());
+        }
+    }
+
+    private void removerAluno() {
+        System.out.println("\n=== REMOVER ALUNO ===");
+        System.out.print("Digite o ID do aluno: ");
+        String entrada = scanner.nextLine();
+
+        if (!ValidacaoUtil.numeroInteiroValido(entrada)) {
+            System.out.println("ID invalido.");
+            return;
+        }
+
+        int id = Integer.parseInt(entrada);
+
+        if (alunoController.removerAluno(id)) {
+            System.out.println("Aluno removido com sucesso!");
+        } else {
+            System.out.println("Aluno nao encontrado.");
+        }
+    }
+
+    private void renovarPlano() {
+        System.out.println("\n=== RENOVAR PLANO ===");
+        System.out.print("Digite o ID do aluno: ");
+        String entrada = scanner.nextLine();
+
+        if (!ValidacaoUtil.numeroInteiroValido(entrada)) {
+            System.out.println("ID invalido.");
+            return;
+        }
+
+        int id = Integer.parseInt(entrada);
+
+        if (alunoController.renovarPlano(id)) {
+            System.out.println("Plano renovado com sucesso! Novo vencimento em 30 dias a partir de hoje.");
+        } else {
+            System.out.println("Aluno nao encontrado.");
+        }
+    }
+}
+	LoginView.java
+	package view;
+
+import controller.LoginController;
+
+import java.util.Scanner;
+
+public class LoginView {
+
+    private Scanner scanner;
+    private LoginController loginController;
+
+    public LoginView(Scanner scanner) {
+        this.scanner = scanner;
+        this.loginController = new LoginController();
+    }
+
+    public boolean iniciar() {
+        if (!loginController.existeUsuarioCadastrado()) {
+            cadastrarPrimeiroUsuario();
+        }
+
+        return realizarLogin();
+    }
+
+    private void cadastrarPrimeiroUsuario() {
+        System.out.println("=== CADASTRO DO PRIMEIRO USUARIO ===");
+        System.out.println("Nenhum usuario cadastrado. Realize o cadastro inicial.");
+
+        System.out.print("Digite o login: ");
+        String login = scanner.nextLine();
+
+        System.out.print("Digite a senha: ");
+        String senha = scanner.nextLine();
+
+        loginController.cadastrarUsuario(login, senha);
+        System.out.println("Usuario cadastrado com sucesso!");
+    }
+
+    private boolean realizarLogin() {
+        int tentativas = 0;
+
+        while (tentativas < 3) {
+            System.out.println("=== LOGIN ===");
+            System.out.print("Login: ");
+            String login = scanner.nextLine();
+
+            System.out.print("Senha: ");
+            String senha = scanner.nextLine();
+
+            if (loginController.validarLogin(login, senha)) {
+                System.out.println("Login realizado com sucesso!");
+                return true;
+            }
+
+            tentativas++;
+            System.out.println("Login ou senha incorretos. Tentativas restantes: " + (3 - tentativas));
+        }
+
+        System.out.println("Voce excedeu o numero de tentativas.");
+        return solicitarNovaSenha();
+    }
+
+    private boolean solicitarNovaSenha() {
+        System.out.println("=== REDEFINICAO DE SENHA ===");
+
+        while (true) {
+            System.out.print("Digite uma nova senha: ");
+            String novaSenha = scanner.nextLine();
+
+            if (loginController.senhaUsadaAnteriormente(novaSenha)) {
+                System.out.println("Essa senha ja foi utilizada anteriormente. Escolha outra.");
+                continue;
+            }
+
+            loginController.alterarSenha(novaSenha);
+            System.out.println("Senha alterada com sucesso! Faca login novamente.");
+            return realizarLogin();
+        }
+    }
+}
+	MenuPrincipalView.java
+	package view;
+
+import utils.ValidacaoUtil;
+
+import java.util.Scanner;
+
+public class MenuPrincipalView {
+
+    private Scanner scanner;
+    private AlunoView alunoView;
+    private PlanoView planoView;
+    private RegistroAcessoView registroAcessoView;
+    private RelatorioView relatorioView;
+
+    public MenuPrincipalView(Scanner scanner) {
+        this.scanner = scanner;
+        this.alunoView = new AlunoView(scanner);
+        this.planoView = new PlanoView(scanner);
+        this.registroAcessoView = new RegistroAcessoView(scanner);
+        this.relatorioView = new RelatorioView(scanner);
+    }
+
+    public void exibirMenu() {
+        int opcao = 0;
+
+        do {
+            System.out.println("\n========================================");
+            System.out.println("        SISTEMA DE ACADEMIA");
+            System.out.println("========================================");
+            System.out.println("1 - Gerenciar Alunos");
+            System.out.println("2 - Gerenciar Planos");
+            System.out.println("3 - Registrar Entrada/Saida");
+            System.out.println("4 - Relatorios");
+            System.out.println("5 - Gerenciar Personais");
+            System.out.println("0 - Sair");
+            System.out.print("Escolha uma opcao: ");
+
+            String entrada = scanner.nextLine();
+
+            if (!ValidacaoUtil.numeroInteiroValido(entrada)) {
+                System.out.println("Opcao invalida!");
+                continue;
+            }
+
+            opcao = Integer.parseInt(entrada);
+
+            switch (opcao) {
+                case 1:
+                    alunoView.exibirMenu();
+                    break;
+                case 2:
+                    planoView.exibirMenu();
+                    break;
+                case 3:
+                    registroAcessoView.exibirMenu();
+                    break;
+                case 4:
+                    relatorioView.exibirMenu();
+                    break;
+                case 5:
+                    new PersonalView(scanner).exibirMenu();
+                    break;
+                case 0:
+                    System.out.println("Saindo do sistema. Ate logo!");
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+            }
+
+        } while (opcao != 0);
+    }
+}
+	PersonalView.java
+	package view;
+
+import controller.PersonalController;
+import model.Personal;
+import controller.AlunoController;
+import model.Aluno;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class PersonalView {
+
+    private Scanner scanner;
+    private PersonalController controller;
+
+    public PersonalView(Scanner scanner) {
+        this.scanner = scanner;
+        this.controller = new PersonalController();
+    }
+
+    public void exibirMenu() {
+
+        int opcao;
+
+        do {
+
+            System.out.println("\n=== PERSONAIS ===");
+            System.out.println("1 - Listar Personais");
+            System.out.println("2 - Vincular Personal");
+            System.out.println("0 - Voltar");
+            System.out.print("Escolha: ");
+
+            opcao = Integer.parseInt(scanner.nextLine());
+
+            switch (opcao) {
+
+                case 1:
+                    listarPersonais();
+                    break;
+                case 2:
+                    vincularPersonal();
+                    break;
+                case 0:
+                    System.out.println("Voltando...");
+                    break;
+
+                default:
+                    System.out.println("Opcao invalida!");
+            }
+
+        } while (opcao != 0);
+    }
+
+    private void listarPersonais() {
+
+        List<Personal> lista = controller.listar();
+
+        System.out.println("\n=== PERSONAIS DISPONIVEIS ===");
+
+        for (Personal p : lista) {
+            System.out.println(
+                    "ID: " + p.getId()
+                    + " | Nome: " + p.getNome()
+                    + " | Alunos: "
+                    + p.getQuantidadeAlunos()
+                    + "/5"
+            );
+        }
+    }
+    private void vincularPersonal() {
+
+    AlunoController alunoController = new AlunoController();
+
+    System.out.print("Digite o ID do aluno: ");
+    int idAluno = Integer.parseInt(scanner.nextLine());
+
+    Aluno aluno = alunoController.buscarPorId(idAluno);
+
+    if (aluno == null) {
+        System.out.println("Aluno nao encontrado.");
+        return;
+    }
+
+    String plano = aluno.getPlano().getNome().toUpperCase();
+
+    if (plano.equals("BASICO")) {
+        System.out.println("Plano BASICO nao possui personal.");
+        return;
+    }
+
+    if (plano.equals("VIP")) {
+        System.out.println("Plano VIP ja possui acompanhamento incluso.");
+        return;
+    }
+
+    listarPersonais();
+
+    System.out.print("Escolha o ID do personal: ");
+    int idPersonal = Integer.parseInt(scanner.nextLine());
+
+    boolean sucesso = controller.vincularAluno(aluno, idPersonal);
+
+    if (sucesso) {
+        System.out.println("Personal vinculado com sucesso!");
+    } else {
+        System.out.println("Personal lotado ou inexistente.");
+    }
+}
+}
+	PlanoView.java
+	package view;
+
+import controller.AlunoController;
+import utils.ValidacaoUtil;
+
+import java.util.Scanner;
+
+public class PlanoView {
+
+    private Scanner scanner;
+    private AlunoController alunoController;
+
+    public PlanoView(Scanner scanner) {
+        this.scanner = scanner;
+        this.alunoController = new AlunoController();
+    }
+
+    public void exibirMenu() {
+        int opcao = 0;
+
+        do {
+            System.out.println("\n=== GERENCIAR PLANOS ===");
+            System.out.println("1 - Ver descricao dos planos");
+            System.out.println("2 - Alterar plano de um aluno");
+            System.out.println("0 - Voltar");
+            System.out.print("Escolha uma opcao: ");
+
+            String entrada = scanner.nextLine();
+
+            if (!ValidacaoUtil.numeroInteiroValido(entrada)) {
+                System.out.println("Opcao invalida!");
+                continue;
+            }
+
+            opcao = Integer.parseInt(entrada);
+
+            switch (opcao) {
+                case 1:
+                    verDescricaoPlanos();
+                    break;
+                case 2:
+                    alterarPlanoAluno();
+                    break;
+                case 0:
+                    System.out.println("Voltando ao menu principal...");
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+            }
+
+        } while (opcao != 0);
+    }
+
+    private void verDescricaoPlanos() {
+        System.out.println("\n=== PLANOS DISPONIVEIS ===");
+        System.out.println("BASICO  - Sem personal");
+        System.out.println("PREMIUM - Personal 3 vezes por semana");
+        System.out.println("VIP     - Personal todos os dias");
+    }
+
+    private void alterarPlanoAluno() {
+        System.out.println("\n=== ALTERAR PLANO DE ALUNO ===");
+        System.out.print("Digite o ID do aluno: ");
+        String entradaId = scanner.nextLine();
+
+        if (!ValidacaoUtil.numeroInteiroValido(entradaId)) {
+            System.out.println("ID invalido.");
+            return;
+        }
+
+        int id = Integer.parseInt(entradaId);
+
+        if (alunoController.buscarPorId(id) == null) {
+            System.out.println("Aluno nao encontrado.");
+            return;
+        }
+
+        String novoPlano;
+        do {
+            System.out.println("Planos disponiveis: BASICO, PREMIUM, VIP");
+            System.out.print("Novo plano: ");
+            novoPlano = scanner.nextLine();
+            if (!ValidacaoUtil.planoValido(novoPlano)) {
+                System.out.println("Plano invalido.");
+            }
+        } while (!ValidacaoUtil.planoValido(novoPlano));
+
+        alunoController.atualizarPlano(id, novoPlano);
+        System.out.println("Plano atualizado com sucesso!");
+    }
+}
+	RegistroAcessoView.java
+	package view;
+
+import controller.AlunoController;
+import controller.RegistroAcessoController;
+import model.Aluno;
+import utils.ValidacaoUtil;
+
+import java.util.Scanner;
+
+public class RegistroAcessoView {
+
+    private Scanner scanner;
+    private AlunoController alunoController;
+    private RegistroAcessoController registroController;
+
+    public RegistroAcessoView(Scanner scanner) {
+        this.scanner = scanner;
+        this.alunoController = new AlunoController();
+        this.registroController = new RegistroAcessoController();
+    }
+
+    public void exibirMenu() {
+        int opcao = 0;
+
+        do {
+            System.out.println("\n=== REGISTRAR ENTRADA/SAIDA ===");
+            System.out.println("1 - Registrar Entrada");
+            System.out.println("2 - Registrar Saida");
+            System.out.println("0 - Voltar");
+            System.out.print("Escolha uma opcao: ");
+
+            String entrada = scanner.nextLine();
+
+            if (!ValidacaoUtil.numeroInteiroValido(entrada)) {
+                System.out.println("Opcao invalida!");
+                continue;
+            }
+
+            opcao = Integer.parseInt(entrada);
+
+            switch (opcao) {
+                case 1:
+                    registrarEntrada();
+                    break;
+                case 2:
+                    registrarSaida();
+                    break;
+                case 0:
+                    System.out.println("Voltando ao menu principal...");
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+            }
+
+        } while (opcao != 0);
+    }
+
+    private void registrarEntrada() {
+        System.out.println("\n=== REGISTRAR ENTRADA ===");
+        System.out.print("Digite o ID do aluno: ");
+        String entradaId = scanner.nextLine();
+
+        if (!ValidacaoUtil.numeroInteiroValido(entradaId)) {
+            System.out.println("ID invalido.");
+            return;
+        }
+
+        int id = Integer.parseInt(entradaId);
+        Aluno aluno = alunoController.buscarPorId(id);
+
+        if (aluno == null) {
+            System.out.println("Aluno nao encontrado.");
+            return;
+        }
+
+        if (registroController.alunoEstaDentro(id)) {
+            System.out.println("Este aluno ja esta na academia. Registre a saida primeiro.");
+            return;
+        }
+
+        registroController.registrarEntrada(id, aluno.getNome());
+        System.out.println("Entrada registrada com sucesso para " + aluno.getNome() + "!");
+    }
+
+    private void registrarSaida() {
+        System.out.println("\n=== REGISTRAR SAIDA ===");
+        System.out.print("Digite o ID do aluno: ");
+        String entradaId = scanner.nextLine();
+
+        if (!ValidacaoUtil.numeroInteiroValido(entradaId)) {
+            System.out.println("ID invalido.");
+            return;
+        }
+
+        int id = Integer.parseInt(entradaId);
+        Aluno aluno = alunoController.buscarPorId(id);
+
+        if (aluno == null) {
+            System.out.println("Aluno nao encontrado.");
+            return;
+        }
+
+        if (registroController.registrarSaida(id)) {
+            System.out.println("Saida registrada com sucesso para " + aluno.getNome() + "!");
+        } else {
+            System.out.println("Este aluno nao possui entrada registrada sem saida.");
+        }
+    }
+}
+	RelatorioView.java
+	package view;
+
+import controller.RelatorioController;
+import model.Aluno;
+import model.RegistroAcesso;
+import utils.ValidacaoUtil;
+
+import java.util.List;
+import java.util.Scanner;
+
+public class RelatorioView {
+
+    private Scanner scanner;
+    private RelatorioController relatorioController;
+
+    public RelatorioView(Scanner scanner) {
+        this.scanner = scanner;
+        this.relatorioController = new RelatorioController();
+    }
+
+    public void exibirMenu() {
+        int opcao = 0;
+
+        do {
+            System.out.println("\n=== RELATORIOS ===");
+            System.out.println("1 - Alunos Ativos");
+            System.out.println("2 - Alunos Vencidos");
+            System.out.println("3 - Quantidade de Alunos por Plano");
+            System.out.println("4 - Historico de Entradas e Saidas");
+            System.out.println("0 - Voltar");
+            System.out.print("Escolha uma opcao: ");
+
+            String entrada = scanner.nextLine();
+
+            if (!ValidacaoUtil.numeroInteiroValido(entrada)) {
+                System.out.println("Opcao invalida!");
+                continue;
+            }
+
+            opcao = Integer.parseInt(entrada);
+
+            switch (opcao) {
+                case 1:
+                    exibirAlunosAtivos();
+                    break;
+                case 2:
+                    exibirAlunosVencidos();
+                    break;
+                case 3:
+                    exibirQuantidadePorPlano();
+                    break;
+                case 4:
+                    exibirHistoricoAcessos();
+                    break;
+                case 0:
+                    System.out.println("Voltando ao menu principal...");
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+            }
+
+        } while (opcao != 0);
+    }
+
+    private void exibirAlunosAtivos() {
+        System.out.println("\n=== ALUNOS ATIVOS ===");
+        List<Aluno> ativos = relatorioController.listarAlunosAtivos();
+
+        if (ativos.isEmpty()) {
+            System.out.println("Nenhum aluno ativo.");
+            return;
+        }
+
+        for (Aluno aluno : ativos) {
+            System.out.println(aluno.toString());
+        }
+    }
+
+    private void exibirAlunosVencidos() {
+        System.out.println("\n=== ALUNOS VENCIDOS ===");
+        List<Aluno> vencidos = relatorioController.listarAlunosVencidos();
+
+        if (vencidos.isEmpty()) {
+            System.out.println("Nenhum aluno vencido.");
+            return;
+        }
+
+        for (Aluno aluno : vencidos) {
+            System.out.println(aluno.toString());
+        }
+    }
+
+    private void exibirQuantidadePorPlano() {
+        System.out.println("\n=== QUANTIDADE DE ALUNOS POR PLANO ===");
+        System.out.println("BASICO: " + relatorioController.contarPorPlano("BASICO"));
+        System.out.println("PREMIUM: " + relatorioController.contarPorPlano("PREMIUM"));
+        System.out.println("VIP: " + relatorioController.contarPorPlano("VIP"));
+    }
+
+    private void exibirHistoricoAcessos() {
+        System.out.println("\n=== HISTORICO DE ENTRADAS E SAIDAS ===");
+        List<RegistroAcesso> historico = relatorioController.historicoAcessos();
+
+        if (historico.isEmpty()) {
+            System.out.println("Nenhum registro encontrado.");
+            return;
+        }
+
+        for (RegistroAcesso registro : historico) {
+            System.out.println(registro.toString());
+        }
+    }
+}
